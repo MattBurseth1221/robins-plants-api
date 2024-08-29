@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,6 +31,7 @@ export class UserController {
    */
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.userService.createUser(createUserDto);
   }
 
@@ -69,7 +71,7 @@ export class UserController {
    * DELETE http://localhost:3000/user/:id
    */
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.removeUser(+id);
+  remove(@Param('id') id: UUID) {
+    return this.userService.removeUser(id);
   }
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { auth_user } from './entities/user.entity';
 import { UUID } from 'crypto';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class UserService {
    * injecting repository here. Another approch can be Active records.
    */
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(auth_user) private readonly userRepository: Repository<auth_user>,
   ) {}
 
   /**
@@ -22,11 +22,12 @@ export class UserService {
    * we have defined what are the keys we are expecting from body
    * @returns promise of user
    */
-  createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user: User = new User();
+  createUser(createUserDto: CreateUserDto): Promise<auth_user> {
+    const user: auth_user = new auth_user();
+    user.id = createUserDto.id;
     user.email = createUserDto.email;
     user.username = createUserDto.username;
-    user.password = createUserDto.password;
+    user.password_hash = createUserDto.password_hash;
     return this.userRepository.save(user);
   }
 
@@ -34,7 +35,7 @@ export class UserService {
    * this function is used to get all the user's list
    * @returns promise of array of users
    */
-  findAllUser(): Promise<User[]> {
+  findAllUser(): Promise<auth_user[]> {
     return this.userRepository.find();
   }
 
@@ -43,7 +44,7 @@ export class UserService {
    * @param id is type of number, which represent the id of user.
    * @returns promise of user
    */
-  viewUser(id: UUID): Promise<User> {
+  viewUser(id: UUID): Promise<auth_user> {
     return this.userRepository.findOneBy({ id });
   }
 
@@ -54,11 +55,11 @@ export class UserService {
    * @param updateUserDto this is partial type of createUserDto.
    * @returns promise of udpate user
    */
-  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user: User = new User();
+  updateUser(id: number, updateUserDto: UpdateUserDto): Promise<auth_user> {
+    const user: auth_user = new auth_user();
     user.email = updateUserDto.email;
     user.username = updateUserDto.username;
-    user.password = updateUserDto.password;
+    user.password_hash = updateUserDto.password_hash;
 
     return this.userRepository.save(user);
   }
@@ -68,7 +69,7 @@ export class UserService {
    * @param id is the type of number, which represent id of user
    * @returns nuber of rows deleted or affected
    */
-  removeUser(id: number): Promise<{ affected?: number }> {
+  removeUser(id: UUID): Promise<{ affected?: number }> {
     return this.userRepository.delete(id);
   }
 }

@@ -2,7 +2,7 @@ import { UUID } from 'crypto';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class auth_user {
   /**
    * this decorator will help to auto generate id for the table.
    */
@@ -16,5 +16,5 @@ export class User {
   email: string;
 
   @Column({ type: 'varchar' })
-  password: string;
+  password_hash: string;
 }
