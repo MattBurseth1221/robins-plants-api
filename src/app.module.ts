@@ -9,12 +9,12 @@ import { User } from './user/entities/user.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '10.0.0.151',
+      host: ,
       port: 5432,
-      password: 'simform',
-      username: 'postgres',
+      password: ,
+      username: ,
       entities: [User],
-      database: 'pgWithNest',
+      database: ,
       synchronize: true,
       logging: true,
     }),
